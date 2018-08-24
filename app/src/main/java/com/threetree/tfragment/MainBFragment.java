@@ -57,11 +57,6 @@ public class MainBFragment extends RecyclerFragment {
     }
 
 
-    @Override
-    protected boolean immersionBarEnabled()
-    {
-        return true;
-    }
 
     @Override
     protected BaseRecyclerAdapter getAdapter()

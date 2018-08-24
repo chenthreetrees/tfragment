@@ -51,11 +51,16 @@ public abstract class RecyclerFragment extends ImmersionFragment {
     private void setTitleBar()
     {
         mTitleBar = getTitleBar();
+        int height = getTitleBarHeight();
         if(mTitleBar != null)
         {
             mLayout.addView(mTitleBar,1,
                     new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                           getTitleBarHeight()));
+                            height));
+
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)mRecyclerView.getLayoutParams();
+            params.topMargin = height;
+            mRecyclerView.setLayoutParams(params);
         }
     }
 
