@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.threetree.recycler.fragment.BaseFragment;
+import com.threetree.ttfragment.fragment.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;

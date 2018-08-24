@@ -46,7 +46,7 @@
 
     </LinearLayout>
 
-    <com.threetree.refreshadapterdemo.APagingViewPager
+    <com.threetree.tfragment.APagingViewPager
         android:id="@+id/viewpager"
         android:layout_above="@+id/bottom"
         android:layout_width="match_parent"

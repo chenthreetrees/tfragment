@@ -14,13 +14,18 @@ import com.threetree.ttrefreshrecyclerview.HTRefreshListener;
 import com.threetree.ttrefreshrecyclerview.HTRefreshRecyclerView;
 
 /**
+ * 将整个页面封装成列表页面，配合BaseRecyclerAdapter使用，
+ * 实现多类型子项的适配，使用简单，提供可定制的titlebar和无数据时显示页面
+ * 页面布局采用FrameLayout
+ *
  * Created by Administrator on 2018/7/29.
  */
-
 public abstract class RecyclerFragment extends ImmersionFragment {
-    protected HTRefreshRecyclerView mRecyclerView;
+    private HTRefreshRecyclerView mRecyclerView;
     protected FrameLayout mLayout;
     View mTitleBar;
+
+    private HTRefreshHolder mRefreshHolder;
     /**
      * 空白数据时候显示的页面
      */
@@ -58,21 +63,17 @@ public abstract class RecyclerFragment extends ImmersionFragment {
     {
         if(isRefresh() || isLoadmore())
         {
-            HTRefreshHolder viewHolder = new HTRefreshHolder(mActivity);
-            mRecyclerView.setRefreshViewHolder(viewHolder);
+            mRefreshHolder = new HTRefreshHolder(mActivity);
+            mRecyclerView.setRefreshViewHolder(mRefreshHolder);
         }
         mRecyclerView.setLayoutManager(getLayoutManager());
-        RecyclerView.ItemDecoration decoration = getItemDecoration();
-        if(decoration !=null)
-        {
-            mRecyclerView.addItemDecoration(decoration);
-        }
         BaseRecyclerAdapter adapter = getAdapter();
         if(adapter == null)
-            throw new NullPointerException("adapter is null");
+            throw new NullPointerException("adapter must not be null");
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setLoadMoreViewShow(false);
+
     }
+
 
     private void setEmptyView()
     {
@@ -95,7 +96,12 @@ public abstract class RecyclerFragment extends ImmersionFragment {
         {
             super.initImmersionBar();
         }
-        mRecyclerView.setPadding(0,getTopPadding(),0,getBottomPadding());
+        int topPadding = getTopPadding();
+        if(mImmersionBar != null)
+        {
+            topPadding = topPadding + mImmersionBar.getBarParams().titleBarHeight;
+        }
+        mRecyclerView.setPadding(0,topPadding,0,getBottomPadding());
     }
 
     /**
@@ -117,48 +123,12 @@ public abstract class RecyclerFragment extends ImmersionFragment {
     }
 
     /**
-     * 设置下拉刷新事件
-     * @param listener
-     */
-    protected void setOnRefreshListener(HTRefreshListener listener)
-    {
-        if(isRefresh())
-        {
-            mRecyclerView.setOnRefreshListener(listener);
-        }
-    }
-
-    /**
-     * 设置下拉加载事件
-     * @param listener
-     */
-    protected void setOnLoadMoreListener(HTLoadMoreListener listener)
-    {
-        if(isLoadmore())
-        {
-            mRecyclerView.setOnLoadMoreListener(listener);
-        }
-    }
-
-    protected void setLoadMoreViewShow(boolean isShow)
-    {
-        if(isLoadmore())
-        {
-            mRecyclerView.setLoadMoreViewShow(isShow);
-        }
-    }
-
-    /**
      * 设置recyclerview的偏移
      * 布局采用framelayout,titlebar叠在recyclerview上面，不同页面根据需求去做偏移
      * @return
      */
     protected int getTopPadding()
     {
-        if(mImmersionBar != null)
-        {
-            return mImmersionBar.getBarParams().titleBarHeight;
-        }
         return 0;
     }
 
@@ -179,11 +149,6 @@ public abstract class RecyclerFragment extends ImmersionFragment {
         return new LinearLayoutManager(mActivity);
     }
 
-    protected RecyclerView.ItemDecoration getItemDecoration()
-    {
-        return null;
-    }
-
     /**
      * 设置空白数据页面
      * @return
@@ -198,15 +163,81 @@ public abstract class RecyclerFragment extends ImmersionFragment {
      * 从子类传入Titlebar
      * @return
      */
-    protected abstract View getTitleBar();
+    protected View getTitleBar()
+    {
+        return null;
+    }
 
     /**
      * 设置titlebar的高度
      * @return
      */
-    protected abstract int getTitleBarHeight();
+    protected int getTitleBarHeight()
+    {
+        return 0;
+    }
 
+    /**
+     * 设置适配器
+     * @return
+     */
     protected abstract BaseRecyclerAdapter getAdapter();
+
+    /**
+     * 添加ItemDecoration
+     * @return
+     */
+    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration)
+    {
+        mRecyclerView.addItemDecoration(itemDecoration);
+    }
+
+    /**
+     * 设置上拉加载事件
+     * @param listener
+     */
+    public void setOnLoadMoreListener(HTLoadMoreListener listener)
+    {
+        if(isLoadmore())
+        {
+            mRecyclerView.setOnLoadMoreListener(listener);
+        }
+    }
+
+    /**
+     * 该方法在setRefreshCompleted（false）时候起作用，
+     * true-显示无更多加载
+     * false-隐藏没有更多，每次上拉有隐藏的动画效果
+     * @param isShow
+     */
+    public void setLoadMoreViewShow(boolean isShow)
+    {
+        if(isLoadmore())
+        {
+            mRecyclerView.setLoadMoreViewShow(isShow);
+        }
+    }
+
+    /**
+     * 设置下拉刷新事件
+     * @param listener
+     */
+    public void setOnRefreshListener(HTRefreshListener listener)
+    {
+        if(isRefresh())
+        {
+            mRecyclerView.setOnRefreshListener(listener);
+        }
+    }
+
+    /**
+     * 结束刷新
+     * @param hasMore false-没有更多数据可加载，下次将不会回调onloadmore
+     */
+    public void setRefreshCompleted(boolean hasMore)
+    {
+        mRecyclerView.setRefreshCompleted(hasMore);
+    }
 
     /**
      * 显示空白数据页面

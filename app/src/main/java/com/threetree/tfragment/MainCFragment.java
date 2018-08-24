@@ -1,6 +1,7 @@
 package com.threetree.tfragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,7 +11,11 @@ import android.widget.TextView;
 import com.threetree.ttfragment.BaseRecyclerAdapter;
 import com.threetree.ttfragment.BaseRecyclerHolder;
 import com.threetree.ttfragment.IOnItemLongClickListener;
+import com.threetree.ttfragment.MultTypeAdapter;
+import com.threetree.ttfragment.ViewBinder;
 import com.threetree.ttfragment.fragment.RecyclerFragment;
+import com.threetree.ttfragment.itemdecoration.DividerDecoration;
+import com.threetree.ttfragment.itemdecoration.PaddingDecoration;
 import com.threetree.ttrefreshrecyclerview.HTLoadMoreListener;
 import com.threetree.ttrefreshrecyclerview.HTRefreshListener;
 
@@ -59,6 +64,7 @@ public class MainCFragment extends RecyclerFragment {
         return true;
     }
 
+
     @Override
     protected boolean immersionBarEnabled()
     {
@@ -68,8 +74,53 @@ public class MainCFragment extends RecyclerFragment {
     @Override
     protected BaseRecyclerAdapter getAdapter()
     {
+        DividerDecoration dividerDecoration = new DividerDecoration.Builder()
+                .left(12)
+                .right(12)
+                .height(2)
+                .color(Color.RED)
+                .build();
+        PaddingDecoration paddingDecoration = new PaddingDecoration.Builder()
+                .left(12)
+                .right(12)
+                .build();
+        addItemDecoration(paddingDecoration);
+        addItemDecoration(dividerDecoration);
+
         final List list = getList();
-        final MainCAdapter adapter = new MainCAdapter(mActivity,list);
+        final MultTypeAdapter adapter = new MultTypeAdapter(mActivity,list);
+        adapter.registerLayout(MainItem.class, new ViewBinder() {
+            @Override
+            public int getLayoutId()
+            {
+                return R.layout.item_text;
+            }
+
+            @Override
+            public void bindData(BaseRecyclerHolder holder, Object item, int position)
+            {
+                MainItem mainItem = (MainItem)item;
+                TextView textView = holder.getView(R.id.content_tv);
+                textView.setText(mainItem.text);
+            }
+        });
+
+        adapter.registerLayout(ImageItem.class, new ViewBinder() {
+            @Override
+            public int getLayoutId()
+            {
+                return R.layout.item_button;
+            }
+
+            @Override
+            public void bindData(BaseRecyclerHolder holder, Object item, int position)
+            {
+                ImageItem mainItem = (ImageItem)item;
+                Button button = holder.getView(R.id.button);
+                button.setText(mainItem.text);
+            }
+        });
+
         setOnRefreshListener(new HTRefreshListener() {
             @Override
             public void onRefresh()
@@ -79,11 +130,12 @@ public class MainCFragment extends RecyclerFragment {
                 new Handler(getMainLooper()).postDelayed(new Runnable() {
                     public void run()
                     {
-                        mRecyclerView.setRefreshCompleted(true);
+                        setRefreshCompleted(true);
                     }
                 }, 500);
             }
         });
+        setLoadMoreViewShow(false);
         setOnLoadMoreListener(new HTLoadMoreListener() {
             @Override
             public void onLoadMore()
@@ -95,7 +147,7 @@ public class MainCFragment extends RecyclerFragment {
                 new Handler(getMainLooper()).postDelayed(new Runnable() {
                     public void run()
                     {
-                        mRecyclerView.setRefreshCompleted(true);
+                        setRefreshCompleted(true);
                     }
                 }, 500);
             }
@@ -111,74 +163,26 @@ public class MainCFragment extends RecyclerFragment {
         return adapter;
     }
 
-    private List<MainItem> getList()
+    private List getList()
     {
-        List<MainItem> list = new ArrayList<MainItem>();
-        for (int i=0;i<30;i++)
+        List list = new ArrayList();
+        for (int i=0;i<10;i++)
         {
-            int num = i%3;
-            MainItem mainItem = new MainItem();
+            int num = i%2;
+
             if(num == 0)
             {
-                mainItem.type = 0;
+                MainItem mainItem = new MainItem();
+                mainItem.text = "item" + i;
+                list.add(mainItem);
             }else if(num == 1)
             {
-                mainItem.type = 1;
-            }else if(num == 2)
-            {
-                mainItem.type = 2;
+                ImageItem imageItem = new ImageItem();
+                imageItem.text = "item" + i;
+                list.add(imageItem);
             }
-            mainItem.text = "item" + i;
-            list.add(mainItem);
         }
         return list;
-    }
-
-
-    class MainCAdapter extends BaseRecyclerAdapter
-    {
-        public MainCAdapter(Context context, List list)
-        {
-            super(context, list);
-        }
-
-        @Override
-        public int getItemViewType(int position)
-        {
-            MainItem item = (MainItem)mList.get(position);
-            return item.type;
-        }
-
-        @Override
-        public int getLayoutId(int type)
-        {
-            if(type == 0)
-            {
-                return R.layout.item_text;
-            }else if(type == 1)
-            {
-                return R.layout.item_button;
-            }else if(type == 2)
-            {
-                return R.layout.item_image;
-            }
-            return R.layout.item_text;
-        }
-
-        @Override
-        public void convert(BaseRecyclerHolder holder, Object item, int position, int type)
-        {
-            MainItem mainItem = (MainItem)item;
-            if(type == 0)
-            {
-                TextView textView = holder.getView(R.id.content_tv);
-                textView.setText(mainItem.text);
-            }else if(type == 1)
-            {
-                Button button = holder.getView(R.id.button);
-                button.setText(mainItem.text);
-            }
-        }
     }
 
 }

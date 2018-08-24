@@ -1,9 +1,7 @@
 package com.threetree.tfragment;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Handler;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -58,20 +56,6 @@ public class MainBFragment extends RecyclerFragment {
         return true;
     }
 
-    @Override
-    protected RecyclerView.ItemDecoration getItemDecoration()
-    {
-        return new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state)
-            {
-                int space = 12;
-                if (parent.getChildLayoutPosition(view) == 0) {
-                    outRect.top = space;
-                }
-            }
-        };
-    }
 
     @Override
     protected boolean immersionBarEnabled()
@@ -94,7 +78,7 @@ public class MainBFragment extends RecyclerFragment {
                 new Handler(getMainLooper()).postDelayed(new Runnable() {
                     public void run()
                     {
-                        mRecyclerView.setRefreshCompleted(true);
+                        setRefreshCompleted(true);
                     }
                 }, 500);
             }
@@ -106,7 +90,7 @@ public class MainBFragment extends RecyclerFragment {
                 new Handler(getMainLooper()).postDelayed(new Runnable() {
                     public void run()
                     {
-                        mRecyclerView.setRefreshCompleted(true);
+                        setRefreshCompleted(true);
                     }
                 }, 500);
             }
@@ -129,7 +113,7 @@ public class MainBFragment extends RecyclerFragment {
         }
 
         @Override
-        public void convert(BaseRecyclerHolder holder, Object item, int position, int type)
+        public void convert(BaseRecyclerHolder holder, Object item, int position)
         {
             String text = (String)item;
             TextView textView = holder.getView(R.id.content_tv);

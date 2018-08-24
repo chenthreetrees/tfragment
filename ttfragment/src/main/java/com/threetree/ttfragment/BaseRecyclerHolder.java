@@ -13,7 +13,7 @@ import android.view.View;
 public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> mViews;
     private Context mContext;
-    private BaseRecyclerHolder(Context context, View itemView)
+    private BaseRecyclerHolder(Context context,View itemView)
     {
         super(itemView);
         this.mContext = context;

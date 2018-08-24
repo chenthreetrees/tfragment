@@ -51,7 +51,7 @@ public abstract class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyc
     {
         int layoutId = getLayoutId(viewType);
         View view = mInflater.inflate(layoutId, parent, false);
-        return BaseRecyclerHolder.getRecyclerHolder(mContext, view);
+        return BaseRecyclerHolder.getRecyclerHolder(mContext,view);
     }
 
     @Override
@@ -80,7 +80,7 @@ public abstract class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyc
                 return false;
             }
         });
-        convert(holder, mList.get(position), position,getItemViewType(position));
+        convert(holder, mList.get(position), position);
     }
 
     @Override
@@ -108,24 +108,37 @@ public abstract class BaseRecyclerAdapter extends RecyclerView.Adapter<BaseRecyc
      * @param holder
      * @param item
      * @param position
-     * @param type
      */
-    public abstract void convert(BaseRecyclerHolder holder,Object item,int position,int type);
+    public abstract void convert(BaseRecyclerHolder holder,Object item,int position);
 
 
+    /**
+     * 设置子项的点击事件
+     * @param clickListener
+     */
     public void setIOnItemClickListener(IOnItemClickListener clickListener)
     {
         this.mClickListener = clickListener;
     }
 
+    /**
+     * 设置子项的长安事件
+     * @param longClickListener
+     */
     public void setIOnItemLongClickListener(IOnItemLongClickListener longClickListener)
     {
         this.mLongClickListener = longClickListener;
     }
 
+    /**
+     * 使用该方法要注意：
+     * 该方法取得的holder必须是可见的itemview的holder
+     * 如果这个position的itemview是不可见的，将会返回null
+     * @param position
+     * @return
+     */
     public BaseRecyclerHolder getHolder(int position)
     {
-
         View view = mRecyclerView.getChildAt(position);
         if(view==null)
             return null;

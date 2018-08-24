@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TFragment.iml" filepath="$PROJECT_DIR$/TFragment.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tfragment.iml" filepath="$PROJECT_DIR$/tfragment.iml" />
       <module fileurl="file://$PROJECT_DIR$/ttfragment/ttfragment.iml" filepath="$PROJECT_DIR$/ttfragment/ttfragment.iml" />
     </modules>
   </component>

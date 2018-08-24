@@ -13,6 +13,7 @@ import com.threetree.ttrefreshrecyclerview.viewimpl.HTDefaultVerticalRefreshView
 public class HTRefreshHolder extends HTDefaultVerticalRefreshViewHolder {
 
     IOnRefreshChangeListener mListener;
+
     /**
      * 刷新控件改变时候调用
      */
@@ -29,6 +30,7 @@ public class HTRefreshHolder extends HTDefaultVerticalRefreshViewHolder {
     {
         super(context);
     }
+
 
     @Override
     public void onRefreshPositionChange(float scale, float moveDistance, int refreshStatus, HTViewHolderTracker viewHolderTracker)

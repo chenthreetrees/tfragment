@@ -35,5 +35,5 @@ dependencies {
     //状态栏沉浸
     compile 'com.gyf.barlibrary:barlibrary:2.3.0'
     //刷新的recyclerview
-    compile 'com.github.chenthreetrees:trefreshrecyclerview:1.0.0'
+    compile 'com.github.chenthreetrees:trefreshrecyclerview:1.0.1'
 }
