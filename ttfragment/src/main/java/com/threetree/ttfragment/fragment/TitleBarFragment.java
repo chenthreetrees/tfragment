@@ -24,7 +24,7 @@ public abstract class TitleBarFragment extends ImmersionFragment {
     @Override
     protected boolean initView(View v)
     {
-        mFlyt = (FrameLayout)v.findViewById(R.id.titlebar_ll);
+        mFlyt = (FrameLayout)v.findViewById(R.id.titlebar_fl);
         mTitleBar = getTitleBar();
         int height = getTitleBarHeight();
         if(mTitleBar != null)
