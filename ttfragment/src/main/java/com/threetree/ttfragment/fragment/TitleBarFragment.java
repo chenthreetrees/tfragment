@@ -1,7 +1,7 @@
 package com.threetree.ttfragment.fragment;
 
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.threetree.ttfragment.R;
@@ -12,7 +12,7 @@ import com.threetree.ttfragment.R;
 
 public abstract class TitleBarFragment extends ImmersionFragment {
 
-    private LinearLayout mLlyt;
+    private FrameLayout mFlyt;
     private View mTitleBar;
 
     @Override
@@ -24,16 +24,23 @@ public abstract class TitleBarFragment extends ImmersionFragment {
     @Override
     protected boolean initView(View v)
     {
-        mLlyt = (LinearLayout)v.findViewById(R.id.titlebar_ll);
+        mFlyt = (FrameLayout)v.findViewById(R.id.titlebar_ll);
         mTitleBar = getTitleBar();
+        int height = getTitleBarHeight();
         if(mTitleBar != null)
         {
-            mLlyt.addView(mTitleBar);
+            mFlyt.addView(mTitleBar,1,
+                    new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                            height));
         }
+
         View view = getContentView();
         if(view != null)
         {
-            mLlyt.addView(view,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT);
+            params.topMargin = height;
+            mFlyt.addView(view,params);
         }
         return true;
     }
@@ -52,12 +59,21 @@ public abstract class TitleBarFragment extends ImmersionFragment {
     }
 
     /**
+     * 设置titlebar的高度
+     * @return
+     */
+    protected int getTitleBarHeight()
+    {
+        return 0;
+    }
+
+    /**
      * 设置背景
      * @param res
      */
     public void setBackground(int res)
     {
-        mLlyt.setBackgroundResource(res);
+        mFlyt.setBackgroundResource(res);
     }
 
     /**
@@ -66,7 +82,7 @@ public abstract class TitleBarFragment extends ImmersionFragment {
      */
     public void setBackgroundColor(int color)
     {
-        mLlyt.setBackgroundColor(color);
+        mFlyt.setBackgroundColor(color);
     }
 
     /**
