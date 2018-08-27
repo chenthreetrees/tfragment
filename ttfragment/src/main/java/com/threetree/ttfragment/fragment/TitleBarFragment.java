@@ -27,12 +27,6 @@ public abstract class TitleBarFragment extends ImmersionFragment {
         mFlyt = (FrameLayout)v.findViewById(R.id.titlebar_fl);
         mTitleBar = getTitleBar();
         int height = getTitleBarHeight();
-        if(mTitleBar != null)
-        {
-            mFlyt.addView(mTitleBar,1,
-                    new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                            height));
-        }
 
         View view = getContentView();
         if(view != null)
@@ -41,6 +35,12 @@ public abstract class TitleBarFragment extends ImmersionFragment {
                     FrameLayout.LayoutParams.MATCH_PARENT);
             params.topMargin = height;
             mFlyt.addView(view,params);
+        }
+        if(mTitleBar != null)
+        {
+            mFlyt.addView(mTitleBar,1,
+                    new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                            height));
         }
         return true;
     }
